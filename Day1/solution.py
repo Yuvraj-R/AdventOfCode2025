@@ -25,29 +25,18 @@ def Part2():
 
     with open("rotations.txt", "r") as file:
         for line in file:
-            direction, rotation = line[0], int(line[1:].strip())
+            direction = line[0]
+            rotation = int(line[1:])
 
             if direction == 'L':
                 rotation = -rotation
 
-            # Large rotations can cross 0 multiple times; count every crossing.
-            if rotation > 0:
-                distance_to_zero = 100 if dial % 100 == 0 else 100 - \
-                    (dial % 100)
-                clicks = 0 if rotation < distance_to_zero else 1 + \
-                    (rotation - distance_to_zero) // 100
-            elif rotation < 0:
-                distance_to_zero = dial % 100 or 100
-                steps = -rotation
-                clicks = 0 if steps < distance_to_zero else 1 + \
-                    (steps - distance_to_zero) // 100
-            else:
-                clicks = 0
-            password += clicks
+            target = dial + rotation
 
-            new_dial = (dial + rotation) % 100
+            crossings = abs(target // 100 - dial // 100)
+            password += crossings
 
-            dial = new_dial
+            dial = target % 100
 
     print(password)
 
