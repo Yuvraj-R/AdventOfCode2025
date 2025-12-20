@@ -1,18 +1,16 @@
 def Part1():
     with open("input.txt", "r") as file:
-        ranges = [tuple(r.split("-")) for r in file.read().split(",")]
+        text = file.read().strip().replace("\n", "")
+        ranges = [tuple(map(int, r.split("-"))) for r in text.split(",") if r]
 
     res = 0
     for start, end in ranges:
-        for val in range(int(start), int(end)+1):
-            val_string = str(val)
-            val_length = len(val_string)
-
-            if val_length % 2 != 0:
-                continue
-
-            if val_string[:val_length//2] == val_string[val_length//2:]:
+        for val in range(start, end + 1):
+            s = str(val)
+            L = len(s)
+            if L % 2 == 0 and s[: L // 2] == s[L // 2:]:
                 res += val
+
     print(res)
 
 
@@ -23,27 +21,16 @@ Part1()
 
 def Part2():
     with open("input.txt", "r") as file:
-        ranges = [tuple(r.split("-")) for r in file.read().split(",")]
+        text = file.read().strip().replace("\n", "")
+        ranges = [tuple(map(int, r.split("-"))) for r in text.split(",") if r]
 
     res = 0
     for start, end in ranges:
-        for val in range(int(start), int(end)+1):
-            val_string = str(val)
-            val_length = len(val_string)
-
-            for i in range(1, (val_length // 2) + 1):
-                if val_length % i != 0:
-                    continue
-
-                substrings = []
-                p1, p2 = 0, i
-                for k in range(val_length // i):
-                    substrings.append(val_string[p1:p2])
-                    p1, p2 = p2, p2 + i
-
-                if all(s == substrings[0] for s in substrings):
-                    res += val
-                    break
+        for val in range(start, end + 1):
+            s = str(val)
+            # repeated-at-least-twice iff s is a substring of (s+s)[1:-1]
+            if s in (s + s)[1:-1]:
+                res += val
 
     print(res)
 
