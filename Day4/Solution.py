@@ -1,21 +1,27 @@
 def Part1():
     with open("input.txt", "r") as file:
-        grid = [list(line.strip()) for line in file]
+        grid = [line.strip() for line in file]
 
-    def countAdjRolls(r, c):
-        adjacent_positions = [(r - 1, c - 1), (r - 1, c), (r - 1, c + 1),
-                              (r, c - 1), (r, c + 1), (r + 1, c - 1),
-                              (r + 1, c), (r + 1, c + 1)]
-        return sum(isRoll(adj_r, adj_c) for adj_r, adj_c in adjacent_positions)
-
-    def isRoll(r, c):
-        nonlocal grid
-        return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == '@'
+    R, C = len(grid), len(grid[0])
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
 
     res = 0
-    for r, row in enumerate(grid):
-        for c, col in enumerate(row):
-            if grid[r][c] == '@' and countAdjRolls(r, c) < 4:
+    for r in range(R):
+        for c in range(C):
+            if grid[r][c] != '@':
+                continue
+
+            adj = 0
+            for dr, dc in dirs:
+                rr, cc = r + dr, c + dc
+                if 0 <= rr < R and 0 <= cc < C and grid[rr][cc] == '@':
+                    adj += 1
+                    if adj == 4:
+                        break
+
+            if adj < 4:
                 res += 1
 
     print(res)
